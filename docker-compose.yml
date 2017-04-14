@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  devpi:
+    build:
+      context: .
+      dockerfile: ./compose/devpi/Dockerfile
+    command: devpi-server --start
+    env_file: .env
+
+  nginx:
+    build: ./compose/nginx
+    depends_on:
+      - devpi
+      - certbot
+    ports:
+      - "0.0.0.0:80:80"
+    env_file: .env
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+
+  certbot:
+    image: quay.io/letsencrypt/letsencrypt
+    command: bash -c "sleep 6 && certbot certonly -n --standalone -d $MY_DOMAIN_NAME --text --agree-tos --email $MY_EMAIL_ADDRESS --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --keep-until-expiring --standalone-supported-challenges http-01"
+    entrypoint: ""
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+    ports:
+      - "80"
+      - "443"
+    environment:
+      - TERM=xterm
