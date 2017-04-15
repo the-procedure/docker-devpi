@@ -20,6 +20,7 @@ function initialise_devpi {
     devpi user -m root password="${DEVPI_PASSWORD}"
     devpi index -y -c public pypi_whitelist='*'
     devpi-server --stop
+    devpi-server --recreate-search-index
     devpi-server --status
 }
 
