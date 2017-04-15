@@ -13,12 +13,17 @@ function defaults {
 function initialise_devpi {
     echo "[RUN]: Initialise devpi-server"
     devpi-server --init
-    devpi-server --restrict-modify root --start --host 127.0.0.1 --port 3141
+    devpi-server --start --host 127.0.0.1 --port 3141
     devpi-server --status
     devpi use http://localhost:3141
     devpi login root --password=''
-    devpi user -m root password="${DEVPI_PASSWORD}"
+    devpi user -m root password="${ROOT_PASSWORD}"
     devpi index -y -c public pypi_whitelist='*'
+    devpi logoff
+    devpi user -c ${PRIVATE_INDEX_USER} password="${PRIVATE_INDEX_PASSWORD}" email=${PRIVATE_INDEX_EMAIL}
+    devpi login ${PRIVATE_INDEX_USER} --password="${PRIVATE_INDEX_PASSWORD}"
+    devpi index -c pypi bases=root/pypi
+    devpi use ${PRIVATE_INDEX_USER}/pypi
     devpi-server --stop
     devpi-server --recreate-search-index
     devpi-server --status
@@ -32,7 +37,7 @@ if [ "$1" = 'devpi' ]; then
     fi
 
     echo "[RUN]: Launching devpi-server"
-    exec devpi-server --restrict-modify root --host 0.0.0.0 --port 3141 --theme semantic-ui
+    exec devpi-server --restrict-modify ${PRIVATE_INDEX_USER} --host 0.0.0.0 --port 3141 --theme semantic-ui
 fi
 
 echo "[RUN]: Builtin command not provided [devpi]"
