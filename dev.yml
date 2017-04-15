@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  devpi:
+    build:
+      context: .
+      dockerfile: ./compose/devpi/Dockerfile
+    user: devpi
+    command: /start-server.sh
+    volumes:
+      - ./data:/data
+    env_file: .env
+    restart: always

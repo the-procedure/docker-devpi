@@ -5,8 +5,12 @@ services:
     build:
       context: .
       dockerfile: ./compose/devpi/Dockerfile
-    command: devpi-server --start
+    user: devpi
+    command: /start-server.sh
+    volumes:
+      - ./data:/data
     env_file: .env
+    restart: always
 
   nginx:
     build: ./compose/nginx
