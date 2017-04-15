@@ -5,9 +5,9 @@ services:
     build:
       context: .
       dockerfile: ./compose/devpi/Dockerfile
-    user: devpi
-    command: /start-server.sh
     volumes:
       - ./data:/data
     env_file: .env
+    ports:
+      - "3141:3141"
     restart: always
