@@ -8,6 +8,10 @@ ENV PIP_INDEX_URL="https://pypi.python.org/simple"
 ENV PIP_TRUSTED_HOST="127.0.0.1"
 ENV VIRTUAL_ENV /env
 
+# devpi user
+RUN addgroup --system --gid 1000 devpi \
+    && adduser --system --uid 1000 --disabled-password --home /data --shell /sbin/nologin --ingroup devpi devpi
+
 # create a virtual env in $VIRTUAL_ENV, ensure it respects pip version
 RUN pip install virtualenv \
     && virtualenv $VIRTUAL_ENV \
@@ -15,10 +19,7 @@ RUN pip install virtualenv \
 ENV PATH $VIRTUAL_ENV/bin:$PATH
 
 COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt \
-    && groupadd -r devpi \
-    && useradd -r -g devpi devpi \
-    && usermod -aG sudo devpi
+RUN pip install -r /requirements.txt
 
 EXPOSE 3141
 VOLUME /data
