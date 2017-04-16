@@ -17,7 +17,8 @@ ENV PATH $VIRTUAL_ENV/bin:$PATH
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt \
     && groupadd -r devpi \
-    && useradd -r -g devpi devpi
+    && useradd -r -g devpi devpi \
+    && usermod -aG sudo devpi
 
 EXPOSE 3141
 VOLUME /data
