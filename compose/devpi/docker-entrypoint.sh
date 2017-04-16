@@ -13,19 +13,33 @@ function defaults {
 function initialise_devpi {
     echo "[RUN]: Initialise devpi-server"
     devpi-server --init
+    echo "[RUN]: Initialise devpi-server 1"
     devpi-server --start --host 127.0.0.1 --port 3141
+    echo "[RUN]: Initialise devpi-server 2"
     devpi-server --status
+    echo "[RUN]: Initialise devpi-server 3"
     devpi use http://localhost:3141
+    echo "[RUN]: Initialise devpi-server 4"
     devpi login root --password=''
+    echo "[RUN]: Initialise devpi-server 5"
     devpi user -m root password="${ROOT_PASSWORD}"
+    echo "[RUN]: Initialise devpi-server 6"
     devpi index -y -c public pypi_whitelist='*'
+    echo "[RUN]: Initialise devpi-server 7"
     devpi logoff
+    echo "[RUN]: Initialise devpi-server 8"
     devpi user -c ${PRIVATE_INDEX_USER} password="${PRIVATE_INDEX_PASSWORD}" email=${PRIVATE_INDEX_EMAIL}
+    echo "[RUN]: Initialise devpi-server 9"
     devpi login ${PRIVATE_INDEX_USER} --password="${PRIVATE_INDEX_PASSWORD}"
+    echo "[RUN]: Initialise devpi-server 10"
     devpi index -c pypi bases=root/pypi
+    echo "[RUN]: Initialise devpi-server 11"
     devpi use ${PRIVATE_INDEX_USER}/pypi
+    echo "[RUN]: Initialise devpi-server 12"
     devpi-server --stop
+    echo "[RUN]: Initialise devpi-server 13"
     devpi-server --recreate-search-index
+    echo "[RUN]: Initialise devpi-server 14"
     devpi-server --status
 }
 
