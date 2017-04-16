@@ -23,7 +23,7 @@ EXPOSE 3141
 VOLUME /data
 
 COPY ./compose/devpi/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod 777 /docker-entrypoint.sh
 
 USER devpi
 ENV HOME /data
